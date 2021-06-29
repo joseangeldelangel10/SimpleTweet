@@ -51,17 +51,20 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         ImageView ivProfileImage;
         TextView tvBody;
         TextView tvScreenName;
+        TextView tvRelativeTimestamp;
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
             ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
             tvBody = itemView.findViewById(R.id.tvBody);
             tvScreenName = itemView.findViewById(R.id.tvScreenName);
+            tvRelativeTimestamp = itemView.findViewById(R.id.tvRelativeTimestamp);
         }
 
         public void bind(Tweet tweet) {
             tvBody.setText(tweet.body);
             tvScreenName.setText(tweet.user.screenName);
+            tvRelativeTimestamp.setText("· " + tweet.relativeTimestamp);
             Glide.with(context).load(tweet.user.profileImageUrl).into(ivProfileImage);
             //Glide.with(context).load("https://www.rd.com/wp-content/uploads/2020/07/00_OPENER-Final.jpg").into(ivProfileImage);
         }
