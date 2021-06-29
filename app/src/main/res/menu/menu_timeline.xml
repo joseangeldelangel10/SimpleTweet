@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/ABlogout_butt"
+        android:icon="@drawable/logout_icon"
+        android:orderInCategory="100"
+        android:title="some_item"
+        app:showAsAction="always" />
+</menu>
