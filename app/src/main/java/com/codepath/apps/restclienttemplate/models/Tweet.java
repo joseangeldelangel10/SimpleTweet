@@ -24,31 +24,33 @@ public class Tweet {
     public String relativeTimestamp;
     //public ArrayList hashtagsList = new ArrayList<>();
     public String imageUrl;
-
-    public Tweet(){}
-
     private static final int SECOND_MILLIS = 1000;
     private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
     private static final int HOUR_MILLIS = 60 * MINUTE_MILLIS;
     private static final int DAY_MILLIS = 24 * HOUR_MILLIS;
 
+    public Tweet(){}
+
     public static Tweet fromJson(JSONObject jsonObject) throws JSONException {
         Tweet tweet = new Tweet();
         tweet.body = jsonObject.getString("text");
         tweet.createdAt = jsonObject.getString("created_at");
-        tweet.user = User.fromJson(jsonObject.getJSONObject("user"));
         tweet.relativeTimestamp = tweet.getRelativeTimeAgo(tweet.createdAt);
+        tweet.user = User.fromJson(jsonObject.getJSONObject("user"));
+
         JSONObject entities = jsonObject.getJSONObject("entities");
         try{
-            JSONArray hashtags = entities.getJSONArray("media");
-            for (Integer i = 0; i<hashtags.length(); i++){
-                if (hashtags.getJSONObject(i).getString("type").equals("photo")){
-                    tweet.imageUrl = hashtags.getJSONObject(i).getString("media_url_https");
+            JSONArray media = entities.getJSONArray("media");
+            // AVOIDING FOR LOOP (IMPROVEMENT)
+            JSONObject firstPhoto = media.getJSONObject(0);
+            tweet.imageUrl = firstPhoto.getString("media_url_https");
+            /*for (Integer i = 0; i<media.length(); i++){
+                if (media.getJSONObject(i).getString("type").equals("photo")){
+                    tweet.imageUrl = media.getJSONObject(i).getString("media_url_https");
                     break;
                 }
-            }
+            }*/
 
-            Log.e("parsing media", hashtags.toString() + tweet.body);
             Log.e("parsing media", "image url: " + tweet.imageUrl );
         }catch (JSONException e){
             Log.e("parsing media", "no media found: " + tweet.body);
@@ -61,7 +63,8 @@ public class Tweet {
     public static List<Tweet> fromJsonArray(JSONArray jsonArray) throws JSONException {
         List<Tweet> tweets = new ArrayList<>();
         for (int i=0;i<jsonArray.length(); i++){
-            tweets.add(fromJson(jsonArray.getJSONObject(i)));
+            JSONObject ithTweet = jsonArray.getJSONObject(i);
+            tweets.add(fromJson(ithTweet));
         }
         return tweets;
     }

@@ -1,6 +1,7 @@
 package com.codepath.apps.restclienttemplate;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -49,6 +50,15 @@ public class TimelineActivity extends AppCompatActivity {
         tweets = new ArrayList<>();
 
         /* ------------------------------------------------------------------------------------------------------------------------------------
+                                                        ACTION BAR SECTION
+        ------------------------------------------------------------------------------------------------------------------------------------*/
+        ActionBar actionBar;
+        actionBar = getSupportActionBar();
+        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setLogo(R.drawable.compose_icon);
+        actionBar.setDisplayUseLogoEnabled(true);
+
+        /* ------------------------------------------------------------------------------------------------------------------------------------
                                                         SWIPE CONTAINER SECTION
         ------------------------------------------------------------------------------------------------------------------------------------*/
         swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer); // We get a reference to the "swipe container" view
@@ -65,16 +75,6 @@ public class TimelineActivity extends AppCompatActivity {
         // Configure the refreshing colors
         swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright, android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
 
-        /* ------------------------------------------------------------------------------------------------------------------------------------
-                                                        LOGOUT BUTTON SECTION
-        ------------------------------------------------------------------------------------------------------------------------------------*/
-        logoutButton = findViewById(R.id.logoutButton);
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onLogoutButton();
-            }
-        });
 
         /* ------------------------------------------------------------------------------------------------------------------------------------
                                                         RECYCLED VIEW SECTION
@@ -126,6 +126,8 @@ public class TimelineActivity extends AppCompatActivity {
             Intent intent = new Intent(this, ComposeActivity.class);
             startActivityForResult(intent, REQUEST_CODE);
             return true;
+        }else if (item.getItemId() == R.id.iclogoutButton){
+            onLogoutButton();
         }
         return super.onOptionsItemSelected(item);
     }

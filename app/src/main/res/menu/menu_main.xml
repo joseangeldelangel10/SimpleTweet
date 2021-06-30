@@ -3,8 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/iclogoutButton"
+        android:icon="@drawable/logout_icon"
+        android:title="Compose"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/compose"
-        android:icon="@android:drawable/ic_menu_edit"
+        android:icon="@drawable/compose_icon"
         android:title="Compose"
         app:showAsAction="always" />
 </menu>

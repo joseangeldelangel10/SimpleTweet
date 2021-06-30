@@ -11,6 +11,19 @@
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">#03A9F4</item>
+        <item name="colorPrimaryVariant">#03A9F4</item>
+        <item name="colorOnPrimary">#03A9F4</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">#FFFFFF</item>
+        <item name="colorSecondaryVariant">#FFFFFF</item>
+        <item name="colorOnSecondary">#FFFFFF</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+        <!-- <item name="android:actionBarTheme">@style/customBarStyle</item> -->
+        <!--<item name="android:windowBackground">#FFFFFF</item>-->
     </style>
 
 </resources>
