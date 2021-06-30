@@ -10,16 +10,20 @@ import org.parceler.Parcel;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
 
 @Parcel
 public class Tweet {
+    //private static ArrayList hashtagsList = new ArrayList();
     public String body;
     public String createdAt;
     public User user;
     public String relativeTimestamp;
+    //public ArrayList hashtagsList = new ArrayList<>();
+    public String imageUrl;
 
     public Tweet(){}
 
@@ -34,6 +38,23 @@ public class Tweet {
         tweet.createdAt = jsonObject.getString("created_at");
         tweet.user = User.fromJson(jsonObject.getJSONObject("user"));
         tweet.relativeTimestamp = tweet.getRelativeTimeAgo(tweet.createdAt);
+        JSONObject entities = jsonObject.getJSONObject("entities");
+        try{
+            JSONArray hashtags = entities.getJSONArray("media");
+            for (Integer i = 0; i<hashtags.length(); i++){
+                if (hashtags.getJSONObject(i).getString("type").equals("photo")){
+                    tweet.imageUrl = hashtags.getJSONObject(i).getString("media_url_https");
+                    break;
+                }
+            }
+
+            Log.e("parsing media", hashtags.toString() + tweet.body);
+            Log.e("parsing media", "image url: " + tweet.imageUrl );
+        }catch (JSONException e){
+            Log.e("parsing media", "no media found: " + tweet.body);
+        }
+
+
         return tweet;
     }
 

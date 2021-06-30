@@ -13,12 +13,12 @@ import com.codepath.oauth.OAuthLoginActionBarActivity;
 
 public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
 
-	SampleModelDao sampleModelDao;
+	SampleModelDao sampleModelDao; // what the heck is this?
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_login);
+		super.onCreate(savedInstanceState); // we ensure that background operations of the parent class are done
+		setContentView(R.layout.activity_login); // we inflate the login view
 
 		final SampleModel sampleModel = new SampleModel();
 		sampleModel.setName("CodePath");
@@ -41,15 +41,15 @@ public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
 		return true;
 	}
 
-	// OAuth authenticated successfully, launch primary authenticated activity
-	// i.e Display application "homepage"
+	/* -------------------------------------------------------
+	OAuth authenticated successfully, thus once the authentication is
+	successful we start the timeline activity
+	 -------------------------------------------------------*/
 	@Override
 	public void onLoginSuccess() {
-		Log.e("loginOnSucces", "loged in successfully");
+		Log.i("OAuth", "loged in successfully");
 		Intent i = new Intent(this, TimelineActivity.class);
 		startActivity(i);
-		// Intent i = new Intent(this, PhotosActivity.class);
-		// startActivity(i);
 	}
 
 	// OAuth authentication flow failed, handle the error
@@ -62,6 +62,9 @@ public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
 	// Click handler method for the button used to start OAuth flow
 	// Uses the client to initiate OAuth authorization
 	// This should be tied to a button used to login
+	/* -------------------------------------------------------
+	this method is called from the xml file once the button is pressed
+	------------------------------------------------------- */
 	public void loginToRest(View view) {
 		getClient().connect();
 	}

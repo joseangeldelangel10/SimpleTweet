@@ -47,4 +47,23 @@
         android:layout_marginBottom="0dp"
         android:layout_toEndOf="@+id/tvScreenName"
         android:text="TextView" />
+
+    <!--<ListView
+        android:id="@+id/lvImages"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvBody"
+        android:layout_marginTop="20dp">
+    </ListView>-->
+
+    <ImageView
+        android:id="@+id/tweetImg"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_below="@+id/tvBody"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="136dp"
+        android:layout_marginTop="10dp"
+        tools:srcCompat="@tools:sample/avatars" />
+
 </RelativeLayout>
