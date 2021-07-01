@@ -42,6 +42,8 @@ public class ComposeActivity extends AppCompatActivity {
         btnTweet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                //----------------------------- CODE TO MAKE A REPLY ----------------------
                 String tweetContent = etCompose.getText().toString();
                 if (tweetContent.isEmpty()){
                     Toast.makeText(ComposeActivity.this, "sorry the Tweet cannot be empty", Toast.LENGTH_SHORT).show();

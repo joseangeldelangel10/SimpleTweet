@@ -1,6 +1,7 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.codepath.asynchttpclient.RequestParams;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
@@ -59,6 +60,20 @@ public class TwitterClient extends OAuthBaseClient {
 		RequestParams params = new RequestParams();
 		params.put("status", tweetContent);
 		client.post(apiUrl, params, "",  handler);
+	}
+
+	public void replyToTweet(String tweetContent, String inReplyToId, String initAuthor, JsonHttpResponseHandler handler) {
+		String apiUrl = getApiUrl("statuses/update.json");
+
+		RequestParams params = new RequestParams();
+		params.put("status", tweetContent);
+		if (inReplyToId != null){
+			Log.e("replyingTweet", inReplyToId);
+			params.put("in_reply_to_status_id", inReplyToId);
+			client.post(apiUrl, params, "",  handler);
+		}else{
+			Log.e("replyingTweet", "id resulted null");
+		}
 	}
 
 

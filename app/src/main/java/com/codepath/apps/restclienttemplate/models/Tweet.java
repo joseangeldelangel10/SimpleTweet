@@ -18,6 +18,7 @@ import java.util.Locale;
 @Parcel
 public class Tweet {
     //private static ArrayList hashtagsList = new ArrayList();
+    public String id;
     public String body;
     public String createdAt;
     public User user;
@@ -33,6 +34,7 @@ public class Tweet {
 
     public static Tweet fromJson(JSONObject jsonObject) throws JSONException {
         Tweet tweet = new Tweet();
+        tweet.id = jsonObject.getString("id_str");
         tweet.body = jsonObject.getString("text");
         tweet.createdAt = jsonObject.getString("created_at");
         tweet.relativeTimestamp = tweet.getRelativeTimeAgo(tweet.createdAt);
@@ -55,8 +57,6 @@ public class Tweet {
         }catch (JSONException e){
             Log.e("parsing media", "no media found: " + tweet.body);
         }
-
-
         return tweet;
     }
 

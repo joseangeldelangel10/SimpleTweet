@@ -15,17 +15,17 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="0dp"
         android:layout_marginTop="0dp"
+        android:contentDescription="Profile image of the tweet's author"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/tvScreenName"
-        android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_marginTop="0dp"
         android:layout_toEndOf="@+id/ivProfileImage"
-        android:text="TextView"
+        android:textStyle="bold"
         tools:text="someuser123" />
 
     <TextView
@@ -36,7 +36,6 @@
         android:layout_marginStart="5dp"
         android:layout_marginTop="2dp"
         android:layout_toEndOf="@+id/ivProfileImage"
-        android:text="TextView"
         tools:text="some sample text to try the functionality" />
 
     <TextView
@@ -46,8 +45,7 @@
         android:layout_alignBottom="@+id/tvScreenName"
         android:layout_marginStart="10dp"
         android:layout_marginBottom="0dp"
-        android:layout_toEndOf="@+id/tvScreenName"
-        android:text="TextView" />
+        android:layout_toEndOf="@+id/tvScreenName" />
 
     <!--<ListView
         android:id="@+id/lvImages"
@@ -59,11 +57,12 @@
 
     <ImageView
         android:id="@+id/tweetImg"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="220dp"
+        android:layout_height="180dp"
         android:layout_below="@+id/tvBody"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="136dp"
+        android:layout_alignParentTop="false"
+        android:layout_marginStart="100dp"
         android:layout_marginTop="10dp"
         tools:srcCompat="@tools:sample/avatars" />
 
@@ -74,5 +73,35 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="0dp"
         android:background="?android:attr/listDivider" />
+
+    <ImageButton
+        android:id="@+id/replyButton"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_below="@+id/tweetImg"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="2dp"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <ImageButton
+        android:id="@+id/imageButton2"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_below="@+id/tweetImg"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="2dp"
+        android:layout_toEndOf="@+id/replyButton"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <ImageButton
+        android:id="@+id/imageButton3"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_below="@+id/tweetImg"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="2dp"
+        android:layout_toEndOf="@+id/imageButton2"
+        tools:srcCompat="@tools:sample/avatars" />
 
 </RelativeLayout>

@@ -9,13 +9,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -39,6 +36,7 @@ public class TimelineActivity extends AppCompatActivity {
     List<Tweet> tweets;
     TweetsAdapter adapter;
     Button logoutButton;
+    MenuItem miActionProgressItem;
     private SwipeRefreshLayout swipeContainer;
 
 
@@ -88,6 +86,7 @@ public class TimelineActivity extends AppCompatActivity {
 
     private void populateHomeTimeline() {
         // client.getHomeTimeline specifies the statuses request details
+        //showProgressBar();
         client.getHomeTimeline(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
@@ -95,6 +94,7 @@ public class TimelineActivity extends AppCompatActivity {
                 try {
                     tweets.addAll(Tweet.fromJsonArray(jsonArray));
                     adapter.notifyDataSetChanged();
+                    //hideProgressBar();
                 } catch (JSONException e) {
                     Log.e(TAG, "Json exception", e);
                     //e.printStackTrace();
@@ -114,8 +114,18 @@ public class TimelineActivity extends AppCompatActivity {
         // we inflate our menu layout
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
+        miActionProgressItem = menu.findItem(R.id.miActionProgress);
         return true;
     }
+
+    /*@Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // Store instance of the menu item containing progress
+        miActionProgressItem = menu.findItem(R.id.miActionProgress);
+
+        // Return to finish
+        return super.onPrepareOptionsMenu(menu);
+    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
@@ -134,6 +144,8 @@ public class TimelineActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
+        Log.e("activityResult", String.valueOf(requestCode));
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK){
             // GET DATA FROM INTENT -> TWEET
             Tweet tweet = Parcels.unwrap(data.getParcelableExtra("tweet"));
@@ -142,6 +154,8 @@ public class TimelineActivity extends AppCompatActivity {
             //modify data source and then update adapter
             adapter.notifyItemInserted(0);
             rvTweets.smoothScrollToPosition(0);
+        }else if(requestCode == 30 && resultCode == RESULT_OK){
+            Toast.makeText(this, "reply handled in timeline", Toast.LENGTH_LONG);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -180,5 +194,15 @@ public class TimelineActivity extends AppCompatActivity {
                 Log.d("DEBUG", "Fetch timeline error: ");
             }
         });
+    }
+
+    public void showProgressBar() {
+        // Show progress item
+        miActionProgressItem.setVisible(true);
+    }
+
+    public void hideProgressBar() {
+        // Hide progress item
+        miActionProgressItem.setVisible(false);
     }
 }

@@ -1,28 +1,41 @@
 package com.codepath.apps.restclienttemplate;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Parcelable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+import okhttp3.Headers;
 
 public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder> {
     Context context;
     List<Tweet> tweets;
+    TwitterClient client;
+    public int REPLY_REQUEST_CODE = 30;
 
     //pass in the context and list of tweets
     public TweetsAdapter(Context context, List<Tweet> tweets){
@@ -59,6 +72,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         TextView tvRelativeTimestamp;
         // declaring list view images
         ImageView tweetImg;
+        ImageButton reply;
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
@@ -67,9 +81,10 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvScreenName = itemView.findViewById(R.id.tvScreenName);
             tvRelativeTimestamp = itemView.findViewById(R.id.tvRelativeTimestamp);
             tweetImg = itemView.findViewById(R.id.tweetImg);
+            reply = itemView.findViewById(R.id.replyButton);
         }
 
-        public void bind(Tweet tweet) {
+        public void bind(final Tweet tweet) {
             tvBody.setText(tweet.body);
             tvScreenName.setText(tweet.user.screenName);
             tvRelativeTimestamp.setText("· " + tweet.relativeTimestamp);
@@ -79,14 +94,32 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                     .into(ivProfileImage);
             //Glide.with(context).load("https://www.rd.com/wp-content/uploads/2020/07/00_OPENER-Final.jpg").into(ivProfileImage);
             if(tweet.imageUrl != null){
-                Glide.with(context).load(tweet.imageUrl).into(tweetImg);
-                //tweetImg.setVisibility(View.VISIBLE);
+                Glide.with(context).load(tweet.imageUrl)
+                        .transform( new RoundedCornersTransformation(60, 0))
+                        .into(tweetImg);
+                tweetImg.setVisibility(View.VISIBLE);
             }else {
                 tweetImg.setVisibility(View.GONE);
             }
+            Glide.with(context).load(R.drawable.reply_icon).into((ImageView) itemView.findViewById(R.id.replyButton));
+
+            //Glide.with(context).load(itemView.findViewById()).into();
+            reply.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, ComposeReplyActivity.class);
+                    intent.putExtra("tweet", Parcels.wrap(tweet));
+                    ((Activity) context).startActivityForResult(intent,REPLY_REQUEST_CODE);
+
+                }
+
+            });
             //
 
         }
+
+
+
     }
 
     /*public void clear() {
