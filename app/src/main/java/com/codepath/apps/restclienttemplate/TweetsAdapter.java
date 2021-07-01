@@ -110,7 +110,6 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                     Intent intent = new Intent(context, ComposeReplyActivity.class);
                     intent.putExtra("tweet", Parcels.wrap(tweet));
                     ((Activity) context).startActivityForResult(intent,REPLY_REQUEST_CODE);
-
                 }
 
             });

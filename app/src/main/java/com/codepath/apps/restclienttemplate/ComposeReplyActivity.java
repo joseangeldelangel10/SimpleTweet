@@ -45,7 +45,7 @@ public class ComposeReplyActivity extends ComposeActivity {
         btnTweet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                showProgressBar();
                 //--------------------------------------------- WE CHECK THE ET VIEW AND CHECK CONSTRAINTS ----------------------------------------------------
                 String tweetContent = etCompose.getText().toString();
                 if (tweetContent.isEmpty()){
@@ -66,6 +66,7 @@ public class ComposeReplyActivity extends ComposeActivity {
                     @Override
                     public void onSuccess(int statusCode, Headers headers, JsonHttpResponseHandler.JSON json) {
                         Toast toast = Toast.makeText(ComposeReplyActivity.this, "tweet replied", Toast.LENGTH_LONG);
+                        hideProgressBar();
                         toast.show();
                         Intent intent = new Intent();
                         setResult(RESULT_OK, intent);

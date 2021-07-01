@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,6 +29,7 @@ public class ComposeActivity extends AppCompatActivity {
     EditText etCompose;
     Button btnTweet;
     TwitterClient client;
+    MenuItem miActionProgressItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +46,7 @@ public class ComposeActivity extends AppCompatActivity {
         btnTweet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                showProgressBar();
 
                 //----------------------------- CODE TO MAKE A REPLY ----------------------
                 String tweetContent = etCompose.getText().toString();
@@ -55,12 +60,15 @@ public class ComposeActivity extends AppCompatActivity {
                 }
                 //Toast.makeText(ComposeActivity.this, tweetContent, Toast.LENGTH_LONG).show();
                 //make an API call to Twitter to publish the tweet
+
+
                 client.publishTweet(tweetContent, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Headers headers, JSON json) {
                         Log.i(TAG, "onSucces published Tweet");
                         try {
                             Tweet tweet = Tweet.fromJson(json.jsonObject);
+                            hideProgressBar();
                             Log.e(TAG, "published tweet says" + tweet.body);
                             Intent intent = new Intent();
                             intent.putExtra("tweet", Parcels.wrap(tweet));
@@ -81,7 +89,38 @@ public class ComposeActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        MenuItem compose = menu.findItem(R.id.compose);
+        compose.setVisible(false);
+        miActionProgressItem = menu.findItem(R.id.miActionProgress);
+        return true;
+        //return super.onCreateOptionsMenu(menu);
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.logoutButton){
+            onLogoutButton();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
+    public void showProgressBar() {
+        if (miActionProgressItem != null) {
+            miActionProgressItem.setVisible(true);
+        }
+    }
 
+    public void hideProgressBar() {
+        if (miActionProgressItem != null) {
+            miActionProgressItem.setVisible(true);
+        }
+    }
+    public void onLogoutButton(){
+        client.clearAccessToken();
+        finish();
+    }
 }

@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.codepath.apps.restclienttemplate.models.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
@@ -38,7 +39,7 @@ public class TimelineActivity extends AppCompatActivity {
     Button logoutButton;
     MenuItem miActionProgressItem;
     private SwipeRefreshLayout swipeContainer;
-
+    private EndlessRecyclerViewScrollListener scrollListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,14 +80,31 @@ public class TimelineActivity extends AppCompatActivity {
         ------------------------------------------------------------------------------------------------------------------------------------*/
         rvTweets = findViewById(R.id.rvTweets); // we generate a reference to  the recycler view
         adapter = new TweetsAdapter(this, tweets); // we make an instance of Tweets adapter based on the tweets list
-        rvTweets.setLayoutManager(new LinearLayoutManager(this)); // we bind a layout manager to RV
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        rvTweets.setLayoutManager(linearLayoutManager); // we bind a layout manager to RV
         rvTweets.setAdapter(adapter); // we bind the adapter to the RV
         populateHomeTimeline(); // we fill the RV
+
+        /* ------------------------------------------------------------------------------------------------------------------------------------
+                                                 BINDING INFINITE SCROLLING TO RV
+        ------------------------------------------------------------------------------------------------------------------------------------*/
+        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                //loadNextDataFromApi(page);
+                Toast.makeText(TimelineActivity.this, "fetching new data", Toast.LENGTH_LONG);
+                Log.e("endlessScrolling", "fetching new data");
+                fetchNewData();
+            }
+        };
+        // Adds the scroll listener to RecyclerView
+        rvTweets.addOnScrollListener(scrollListener);
     }
 
     private void populateHomeTimeline() {
         // client.getHomeTimeline specifies the statuses request details
-        //showProgressBar();
         client.getHomeTimeline(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
@@ -108,6 +126,28 @@ public class TimelineActivity extends AppCompatActivity {
         });
     }
 
+    private void fetchNewData(){
+        client.addItemsToTimeline(new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                JSONArray jsonArray = json.jsonArray;
+                try {
+                    tweets.addAll(Tweet.fromJsonArray(jsonArray));
+                    adapter.notifyDataSetChanged();
+                    //hideProgressBar();
+                } catch (JSONException e) {
+                    Log.e(TAG, "Json exception", e);
+                    //e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                Log.e(TAG, "onFailure" + response, throwable);
+            }
+        },
+        tweets.get(tweets.size()-1).id);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
