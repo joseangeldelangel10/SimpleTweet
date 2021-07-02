@@ -11,15 +11,7 @@ Time spent: **24** hours spent in total
 ## User Stories
 
 The following **required** functionality is completed:
-1. User can sign in to Twitter using OAuth login 🖥️
 
-2. User can view the tweets from their home timeline eyes
-
-3. User can Logout 🚪
-
-4. User can compose a new tweet ✉️
-
-5. User can pull to refresh, view character count and embed images ✨
 * [x] User can sign in to Twitter using OAuth login
 * [x] User can view the tweets from their home timeline eyes
 * [x] User can Logout 
@@ -56,6 +48,11 @@ GIF created with [LiceCap](https://www.cockos.com/licecap/).
 
 ## Challenges when developing the app
 
+For this assignment in order to acomplish some of the required stories and many of the bonus features we were required to make individual research, some of the features that represented a challenge where the following:
+
+* Understanding the REST model, the template itself and how the Async requests 
+* Understanding the Twitter API's response structure in order to find the media object (image URL)
+* Undertanding the way in wich POST requests are made to Twitter API to post a Twitter request
 
 ## License
 
