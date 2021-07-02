@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -18,6 +19,9 @@ import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.models.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.apps.restclienttemplate.models.TweetDao;
+import com.codepath.apps.restclienttemplate.models.TweetWithUser;
+import com.codepath.apps.restclienttemplate.models.User;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
@@ -40,12 +44,14 @@ public class TimelineActivity extends AppCompatActivity {
     MenuItem miActionProgressItem;
     private SwipeRefreshLayout swipeContainer;
     private EndlessRecyclerViewScrollListener scrollListener;
+    TweetDao tweetDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState); // we ensure that background operations of the parent class are done
         setContentView(R.layout.activity_timeline); // we inflate the timeline view
         client = TwitterApp.getRestClient(this); // we get the twitter client reference
+        tweetDao = ((TwitterApp) getApplicationContext()).getMyDatabase().tweetDao();
         tweets = new ArrayList<>();
 
         /* ------------------------------------------------------------------------------------------------------------------------------------
@@ -83,6 +89,19 @@ public class TimelineActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rvTweets.setLayoutManager(linearLayoutManager); // we bind a layout manager to RV
         rvTweets.setAdapter(adapter); // we bind the adapter to the RV
+        //Query for existing Tweets in db
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                Log.i(TAG, "Showing data from db");
+                List<TweetWithUser> tweetWithUsers = tweetDao.recentItems();
+                List<Tweet> tweetsFromDB = TweetWithUser.getTweetList(tweetWithUsers);
+                tweets.clear();
+                adapter.notifyDataSetChanged();
+                tweets.addAll(tweetsFromDB);
+                adapter.notifyDataSetChanged();
+            }
+        });
         populateHomeTimeline(); // we fill the RV
 
         /* ------------------------------------------------------------------------------------------------------------------------------------
@@ -101,6 +120,8 @@ public class TimelineActivity extends AppCompatActivity {
         };
         // Adds the scroll listener to RecyclerView
         rvTweets.addOnScrollListener(scrollListener);
+
+
     }
 
     private void populateHomeTimeline() {
@@ -110,8 +131,19 @@ public class TimelineActivity extends AppCompatActivity {
             public void onSuccess(int statusCode, Headers headers, JSON json) {
                 JSONArray jsonArray = json.jsonArray;
                 try {
-                    tweets.addAll(Tweet.fromJsonArray(jsonArray));
+                    final List<Tweet> tweetsFromNetwork = Tweet.fromJsonArray(jsonArray);
+                    tweets.addAll(tweetsFromNetwork);
                     adapter.notifyDataSetChanged();
+
+                    AsyncTask.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.i(TAG, "saving data in db");
+                            List<User> usersFromNetwork = User.fromJsonTweetArray(tweetsFromNetwork);
+                            tweetDao.insertModel(usersFromNetwork.toArray(new User[0]));
+                            tweetDao.insertModel(tweetsFromNetwork.toArray(new Tweet[0]));
+                        }
+                    });
                     //hideProgressBar();
                 } catch (JSONException e) {
                     Log.e(TAG, "Json exception", e);
@@ -127,6 +159,7 @@ public class TimelineActivity extends AppCompatActivity {
     }
 
     private void fetchNewData(){
+
         client.addItemsToTimeline(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
@@ -145,8 +178,10 @@ public class TimelineActivity extends AppCompatActivity {
             public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
                 Log.e(TAG, "onFailure" + response, throwable);
             }
-        },
-        tweets.get(tweets.size()-1).id);
+        }, tweets.get(tweets.size()-1).id);
+        /* ------------------------------------------------------------------------
+        IMPORTANT WE MUST IMPLEMENT A STRING REST HERE IN ORDER TO AVOID LAST TWEET REPEATING ON ENDLESS SCROLLING
+         ------------------------------------------------------------------------*/
     }
 
     @Override
@@ -195,7 +230,13 @@ public class TimelineActivity extends AppCompatActivity {
             adapter.notifyItemInserted(0);
             rvTweets.smoothScrollToPosition(0);
         }else if(requestCode == 30 && resultCode == RESULT_OK){
-            Toast.makeText(this, "reply handled in timeline", Toast.LENGTH_LONG);
+            Tweet tweet = Parcels.unwrap(data.getParcelableExtra("tweet"));
+            //UPDATE THE RV WITH TWEET
+            tweets.add(0, tweet);
+            //modify data source and then update adapter
+            adapter.notifyItemInserted(0);
+            rvTweets.smoothScrollToPosition(0);
+            //Toast.makeText(this, "reply handled in timeline", Toast.LENGTH_LONG);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

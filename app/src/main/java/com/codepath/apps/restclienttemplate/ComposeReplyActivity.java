@@ -63,12 +63,19 @@ public class ComposeReplyActivity extends ComposeActivity {
                 String replyContent = etCompose.getText().toString();
                 client.replyToTweet(replyContent + " \n\nin Reply to: @" + author , tweet.id, "", new JsonHttpResponseHandler() {
                     //@JoseAngelDelAn4
+                    Tweet new_reply;
                     @Override
                     public void onSuccess(int statusCode, Headers headers, JsonHttpResponseHandler.JSON json) {
                         Toast toast = Toast.makeText(ComposeReplyActivity.this, "tweet replied", Toast.LENGTH_LONG);
                         hideProgressBar();
                         toast.show();
                         Intent intent = new Intent();
+                        try {
+                            new_reply = Tweet.fromJson(json.jsonObject);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        intent.putExtra("tweet", Parcels.wrap(new_reply));
                         setResult(RESULT_OK, intent);
                         finish();
                     }

@@ -73,6 +73,8 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         // declaring list view images
         ImageView tweetImg;
         ImageButton reply;
+        ImageButton retweet;
+        ImageButton like;
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
@@ -82,6 +84,8 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvRelativeTimestamp = itemView.findViewById(R.id.tvRelativeTimestamp);
             tweetImg = itemView.findViewById(R.id.tweetImg);
             reply = itemView.findViewById(R.id.replyButton);
+            retweet = itemView.findViewById(R.id.retweetButton);
+            like = itemView.findViewById(R.id.likeButton);
         }
 
         public void bind(final Tweet tweet) {
@@ -102,7 +106,8 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                 tweetImg.setVisibility(View.GONE);
             }
             Glide.with(context).load(R.drawable.reply_icon).into((ImageView) itemView.findViewById(R.id.replyButton));
-
+            Glide.with(context).load(R.drawable.retweet_icon).into((ImageView) itemView.findViewById(R.id.retweetButton));
+            Glide.with(context).load(R.drawable.like_icon).into((ImageView) itemView.findViewById(R.id.likeButton));
             //Glide.with(context).load(itemView.findViewById()).into();
             reply.setOnClickListener(new View.OnClickListener() {
                 @Override

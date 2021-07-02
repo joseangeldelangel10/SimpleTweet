@@ -87,7 +87,7 @@
         tools:srcCompat="@tools:sample/avatars" />
 
     <ImageButton
-        android:id="@+id/imageButton2"
+        android:id="@+id/retweetButton"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_below="@+id/tweetImg"
@@ -97,13 +97,13 @@
         tools:srcCompat="@tools:sample/avatars" />
 
     <ImageButton
-        android:id="@+id/imageButton3"
+        android:id="@+id/likeButton"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_below="@+id/tweetImg"
         android:layout_marginStart="80dp"
         android:layout_marginTop="2dp"
-        android:layout_toEndOf="@+id/imageButton2"
+        android:layout_toEndOf="@+id/retweetButton"
         tools:srcCompat="@tools:sample/avatars" />
 
 </RelativeLayout>

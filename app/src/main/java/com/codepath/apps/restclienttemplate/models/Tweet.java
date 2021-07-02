@@ -2,6 +2,13 @@ package com.codepath.apps.restclienttemplate.models;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,21 +21,36 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
-
 @Parcel
+@Entity(foreignKeys = @ForeignKey(entity=User.class, parentColumns="id", childColumns="user_id"))
 public class Tweet {
     //private static ArrayList hashtagsList = new ArrayList();
+    @PrimaryKey
+    @ColumnInfo
+    @NonNull
     public String id;
+    @ColumnInfo
     public String body;
+    @ColumnInfo
     public String createdAt;
-    public User user;
+    @ColumnInfo
     public String relativeTimestamp;
-    //public ArrayList hashtagsList = new ArrayList<>();
+    @ColumnInfo
     public String imageUrl;
+    @ColumnInfo
     private static final int SECOND_MILLIS = 1000;
+    @ColumnInfo
     private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
+    @ColumnInfo
     private static final int HOUR_MILLIS = 60 * MINUTE_MILLIS;
+    @ColumnInfo
     private static final int DAY_MILLIS = 24 * HOUR_MILLIS;
+
+    @ColumnInfo
+    public String user_id;
+
+    @Ignore
+    public User user;
 
     public Tweet(){}
 
@@ -39,6 +61,7 @@ public class Tweet {
         tweet.createdAt = jsonObject.getString("created_at");
         tweet.relativeTimestamp = tweet.getRelativeTimeAgo(tweet.createdAt);
         tweet.user = User.fromJson(jsonObject.getJSONObject("user"));
+        tweet.user_id = tweet.user.id;
 
         JSONObject entities = jsonObject.getJSONObject("entities");
         try{
