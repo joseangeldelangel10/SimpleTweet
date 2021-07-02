@@ -13,7 +13,7 @@ Time spent: **24** hours spent in total
 The following **required** functionality is completed:
 
 * [x] User can sign in to Twitter using OAuth login
-* [x] User can view the tweets from their home timeline eyes
+* [x] User can view the tweets from their home timeline
 * [x] User can Logout 
 * [x] User can compose a new tweet
 * [x] User can pull to refresh, view character count and embed images
@@ -41,12 +41,27 @@ None **additional features** were implemented
 Here are walkthroughs of implemented user stories:
 
 <img src= 'walkthrough3.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+
 In this gif we can see that the user is able to:
-*
+* Sign in to Twitter using OAuth login
+* User can view the tweets from their home timeline
+* User can pull to refresh and embed images
+* Links in tweets are clickable and will launch the web browser
 
 <img src= 'walkthrough.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
+In this gif we can see that the user is able to:
+* User can pull to refresh and embed images
+* User reply a tweet and view character count
+* User can compose a new tweet and view character count
+* When any background or network task is happening, user sees an indeterminate progress indicator
+* User can Log out
+* ser can view more tweets as they scroll with Endless Scrolling
+
 <img src= 'walkthrough2.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+
+In this gif we can see that the user is able to:
+* User can open the twitter app offline and see last loaded tweets
 
 GIF created with [LiceCap](https://www.cockos.com/licecap/).
 
