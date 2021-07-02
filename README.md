@@ -40,6 +40,10 @@ None **additional features** were implemented
 
 Here are walkthroughs of implemented user stories:
 
+<img src= 'walkthrough3.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+In this gif we can see that the user is able to:
+*
+
 <img src= 'walkthrough.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 <img src= 'walkthrough2.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
